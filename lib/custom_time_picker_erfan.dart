@@ -141,7 +141,7 @@ class _CustomTimePickerErfanState extends State<CustomTimePickerErfan> {
         padding: const EdgeInsets.symmetric(vertical: 8),
         decoration: BoxDecoration(
           color: TimePickerModel.timeDisplayBackgroundColor,  // Use model color instead of hardcoded
-          border: Border.all(color: _model.primaryColor.withOpacity(0.6)),
+          border: Border.all(color: _model.primaryColor.withValues(alpha: 0.6)),
           borderRadius: BorderRadius.circular(8),
         ),
         child: SizedBox(

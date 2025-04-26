@@ -16,8 +16,6 @@ Supports both scroll wheels and manual text input to pick a valid time — and r
 
 📝 Customizable Labels: Customizable button texts and choose-time prompt.
 
-🖍️ Custom Edit Icon: Use your own edit icon.
-
 📱 Responsive: Looks good on any screen size.
 
 ❗ Input Validation: Only valid times are allowed (with automatic error handling).
@@ -28,7 +26,7 @@ Add this to your package's `pubspec.yaml` file:
 
 ```yaml
 dependencies:
-  custom_time_picker_erfan: ^1.0.0
+  custom_time_picker_erfan: ^0.0.1
 ```
 Then run:
 
@@ -60,16 +58,20 @@ ElevatedButton(
     final pickedTime = await showTimePickerErfan(
       context: context,
       initialTime: TimeOfDay(hour: 10, minute: 30),
-      primaryColor: Colors.deepPurple,
-      backgroundColor: Colors.white,
-      textColor: Colors.black,
-      confirmText: "OK",
-      cancelText: "Dismiss",
-      chooseTimeText: "Pick a Time!",
-      editIcon: Icons.edit, // custom icon
+      primaryColor: Colors.blue[700],
+      backgroundColor: const Color.fromARGB(255, 240, 240, 240),
+      textColor: const Color(0xFF2C3E50),
+      confirmText: "Confirm",
+      cancelText: "Cancel",
+      chooseTimeText: "Choose Time",
+      hourLabel: "hour",
+      minuteLabel: "min",
     );
 
+    if (!mounted) return;
+
     if (pickedTime != null) {
+      debugPrint('Selected time: ${pickedTime.format(context)}');
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text('Selected time: ${pickedTime.format(context)}')),
       );
@@ -86,15 +88,16 @@ ElevatedButton(
 Parameter | Type | Description | Default
 initialTime | TimeOfDay | Initial selected time. | Required
 selectedDate | DateTime | Date that determines if future time is allowed. | DateTime.now()
-primaryColor | Color | Color for main buttons, header, etc. | Colors.brown
-backgroundColor | Color | Dialog background color. | Colors.white
-textColor | Color | General text color. | Colors.black87
-errorColor | Color? | Color for errors. | Colors.red
-disabledColor | Color? | Color for disabled states. | Colors.grey
+primaryColor | Color | Color for main buttons, header, etc. | Colors.blue[700]
+backgroundColor | Color | Dialog background color. | Light grey (240, 240, 240)
+textColor | Color | General text color. | Dark blue-gray
+errorColor | Color? | Color for errors. | Material Red 700
+disabledColor | Color? | Color for disabled states. | Light grey
 confirmText | String? | Confirm button text. | "Confirm"
 cancelText | String? | Cancel button text. | "Cancel"
 chooseTimeText | String? | Header text. | "Choose Time"
-editIcon | IconData? | Custom edit icon for manual typing. | Icons.edit
+hourLabel | String? | Label for hour wheel | "hour"
+minuteLabel | String? | Label for minute wheel | "min"
 
 
 ## 📋 Behavior Details
@@ -147,4 +150,8 @@ MIT License
 
 
 For more information on the code and structure, please visit [https://github.com/erfanalizada/custom_time_picker_erfan]
+
+
+
+
 

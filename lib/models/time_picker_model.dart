@@ -140,7 +140,7 @@ class TimePickerModel {
   TextStyle get wheelLabelStyle => TextStyle(
     fontSize: 12,
     fontWeight: FontWeight.w500,
-    color: textColor.withOpacity(0.6),
+    color: textColor.withValues(alpha: 0.6),
     letterSpacing: 0.4,
   );
 
