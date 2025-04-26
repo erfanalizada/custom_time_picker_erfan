@@ -32,53 +32,66 @@ Then run:
 
 flutter pub get
 
-## Usage
+## Full usage example in a Screen
 
 ```dart
+import 'package:flutter/material.dart';
 import 'package:custom_time_picker_erfan/custom_time_picker_erfan.dart';
 
-// inside your function
-void _pickTime(BuildContext context) async {
-  final selectedTime = await showTimePickerErfan(
-    context: context,
-    initialTime: TimeOfDay.now(),
-  );
+class TimePickerScreen extends StatefulWidget {
+  const TimePickerScreen({super.key});
 
-  if (selectedTime != null) {
-    print('Picked time: ${selectedTime.format(context)}');
+  @override
+  State<TimePickerScreen> createState() => _TimePickerScreenState();
+}
+
+class _TimePickerScreenState extends State<TimePickerScreen> {
+  TimeOfDay? selectedTime;
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text('Time Picker Demo'),
+        backgroundColor: Theme.of(context).colorScheme.inversePrimary,
+      ),
+      body: Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Text(
+              'Selected Time: ${selectedTime?.format(context) ?? "No time selected"}',
+              style: Theme.of(context).textTheme.titleLarge,
+            ),
+            const SizedBox(height: 20),
+            ElevatedButton(
+              onPressed: () async {
+                final TimeOfDay? picked = await showTimePickerErfan(
+                  context: context,
+                  initialTime: selectedTime ?? TimeOfDay.now(),
+                  primaryColor: Colors.deepPurple,
+                  backgroundColor: const Color.fromARGB(255, 240, 240, 240),
+                  textColor: const Color(0xFF2C3E50),
+                  confirmText: "Confirm",
+                  cancelText: "Cancel",
+                  chooseTimeText: "Choose Time",
+                );
+                if (picked != null && mounted) {
+                  setState(() {
+                    selectedTime = picked;
+                  });
+                }
+              },
+              child: const Text('Select Time'),
+            ),
+          ],
+        ),
+      ),
+    );
   }
 }
 
-```
-### Full Example
 
-```dart
-ElevatedButton(
-  onPressed: () async {
-    final pickedTime = await showTimePickerErfan(
-      context: context,
-      initialTime: TimeOfDay(hour: 10, minute: 30),
-      primaryColor: Colors.blue[700],
-      backgroundColor: const Color.fromARGB(255, 240, 240, 240),
-      textColor: const Color(0xFF2C3E50),
-      confirmText: "Confirm",
-      cancelText: "Cancel",
-      chooseTimeText: "Choose Time",
-      hourLabel: "hour",
-      minuteLabel: "min",
-    );
-
-    if (!mounted) return;
-
-    if (pickedTime != null) {
-      debugPrint('Selected time: ${pickedTime.format(context)}');
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Selected time: ${pickedTime.format(context)}')),
-      );
-    }
-  },
-  child: const Text("Open Custom Time Picker"),
-)
 ```
 
 # Additional information
