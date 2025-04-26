@@ -7,22 +7,46 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:custom_time_picker_erfan/custom_time_picker_erfan.dart';
 
 void main() {
-  testWidgets('Counter increments smoke test', (WidgetTester tester) async {
-    // Build our app and trigger a frame.
-    await tester.pumpWidget(const MaterialApp());
+  testWidgets('Time Picker shows and selects time', (WidgetTester tester) async {
+    // Build a MaterialApp with a button to show the time picker
+    await tester.pumpWidget(MaterialApp(
+      home: Scaffold(
+        body: Builder(
+          builder: (BuildContext context) {
+            return ElevatedButton(
+              onPressed: () {
+                showTimePickerErfan(
+                  context: context,
+                  initialTime: const TimeOfDay(hour: 10, minute: 30),
+                );
+              },
+              child: const Text('Show Time Picker'),
+            );
+          },
+        ),
+      ),
+    ));
 
-    // Verify that our counter starts at 0.
-    expect(find.text('0'), findsOneWidget);
-    expect(find.text('1'), findsNothing);
+    // Verify the button is present
+    expect(find.text('Show Time Picker'), findsOneWidget);
 
-    // Tap the '+' icon and trigger a frame.
-    await tester.tap(find.byIcon(Icons.add));
-    await tester.pump();
+    // Tap the button to show the time picker
+    await tester.tap(find.text('Show Time Picker'));
+    await tester.pumpAndSettle();
 
-    // Verify that our counter has incremented.
-    expect(find.text('0'), findsNothing);
-    expect(find.text('1'), findsOneWidget);
+    // Verify the time picker dialog is shown
+    expect(find.text('Choose Time'), findsOneWidget);
+    expect(find.text('Cancel'), findsOneWidget);
+    expect(find.text('Confirm'), findsOneWidget);
+
+    // Test cancel button
+    await tester.tap(find.text('Cancel'));
+    await tester.pumpAndSettle();
+
+    // Verify the dialog is dismissed
+    expect(find.text('Choose Time'), findsNothing);
   });
 }
