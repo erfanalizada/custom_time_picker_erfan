@@ -29,11 +29,28 @@ class Screen extends StatelessWidget {
       appBar: AppBar(
         title: const Text('My Screen'),
       ),
-      body:  Center(
-        child: CustomTimePickerErfan(
-          initialTime: TimeOfDay.now(),
-          selectedDate: DateTime.now(),
-          editIcon: Icons.edit,
+      body: Center(
+        child: ElevatedButton(
+          onPressed: () async {
+            final time = await showTimePickerErfan(
+              context: context,
+              initialTime: TimeOfDay.now(),
+            );
+            if (time != null) {
+              final pickedTime = await showTimePickerErfan(
+                context: context,
+                initialTime: TimeOfDay.now(),
+                selectedDate: DateTime(2024, 1, 1),
+                confirmText: "Ok",
+                cancelText: "Back",
+                chooseTimeText: "Select a time",
+              );
+              if (pickedTime != null) {
+                print('Selected time: ${pickedTime.format(context)}');
+              }
+            }
+          },
+          child: const Text('Pick Time'),
         ),
       ),
     );

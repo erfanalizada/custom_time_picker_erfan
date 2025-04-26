@@ -14,25 +14,31 @@ class TimePickerModel {
   final String chooseTimeText;
   final String hourLabel;
   final String minuteLabel;
-  final IconData? editIcon; // Nullable!
 
   late int _selectedHour;
   late int _selectedMinute;
   bool _isEditing = false;
   String? _errorMessage;
 
-  static const defaultPrimaryColor = Colors.brown;
-  static const defaultBackgroundColor = Colors.white;
-  static const defaultTextColor = Colors.black87;
-  static const defaultErrorColor = Colors.red;
-  static const defaultDisabledColor = Colors.grey;
+  // Modern color scheme with blue accent
+  static const defaultPrimaryColor = Color(0xFF1976D2);    // Material Blue 700
+  static const defaultBackgroundColor = Color.fromARGB(255, 240, 240, 240);      // Pure white
+  static const defaultTextColor = Color(0xFF2C3E50);       // Dark blue-gray
+  static const defaultErrorColor = Color(0xFFD32F2F);      // Material Red 700
+  static const defaultDisabledColor = Color.fromARGB(255, 200, 198, 198);   // Light gray
+  
+  // Component-specific colors
+  static const timeDisplayBackgroundColor = Color(0xFFE3F2FD); // Light blue 50
+  static const selectedTimeColor = Color(0xFF1976D2);          // Same as primary
+  static const wheelSelectedTextColor = Color(0xFF1976D2);     // Same as primary
+  static const wheelUnselectedTextColor = Color(0xFFBDBDBD);   // Medium gray
 
   TimePickerModel({
     required this.initialTime,
     required this.selectedDate,
     this.primaryColor = defaultPrimaryColor,
     this.backgroundColor = defaultBackgroundColor,
-    this.textColor = defaultTextColor,
+    this.textColor = const Color.fromARGB(255, 30, 85, 139),
     this.errorColor = defaultErrorColor,
     this.disabledColor = defaultDisabledColor,
     this.confirmText = 'Confirm',
@@ -40,7 +46,6 @@ class TimePickerModel {
     this.chooseTimeText = 'Choose Time',
     this.hourLabel = 'hour',
     this.minuteLabel = 'min',
-    this.editIcon,
   }) {
     _selectedHour = initialTime.hour;
     _selectedMinute = initialTime.minute;
@@ -118,18 +123,58 @@ class TimePickerModel {
   }
 
   // Styles
-  TextStyle get headerStyle => TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: primaryColor);
-  TextStyle get timeDisplayStyle => TextStyle(fontSize: 32, fontWeight: FontWeight.bold, color: errorMessage != null ? errorColor : primaryColor);
-  TextStyle get wheelLabelStyle => TextStyle(fontSize: 12, color: primaryColor.withAlpha(153));
+  TextStyle get headerStyle => TextStyle(
+    fontSize: 20, 
+    fontWeight: FontWeight.w600,
+    color: primaryColor,  // Changed from textColor to primaryColor
+    letterSpacing: 0.15,
+  );
+
+  TextStyle get timeDisplayStyle => TextStyle(
+    fontSize: 32,
+    fontWeight: FontWeight.w600,
+    color: errorMessage != null ? errorColor : selectedTimeColor,
+    letterSpacing: 0.5,
+  );
+
+  TextStyle get wheelLabelStyle => TextStyle(
+    fontSize: 12,
+    fontWeight: FontWeight.w500,
+    color: textColor.withOpacity(0.6),
+    letterSpacing: 0.4,
+  );
+
   TextStyle getWheelNumberStyle(bool isSelected) => TextStyle(
     fontSize: isSelected ? 20 : 16,
-    fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
-    color: isSelected ? primaryColor : primaryColor.withAlpha(77),
+    fontWeight: isSelected ? FontWeight.w600 : FontWeight.w400,
+    color: isSelected ? wheelSelectedTextColor : wheelUnselectedTextColor,
+    letterSpacing: 0.5,
   );
-  TextStyle get cancelButtonStyle => TextStyle(color: primaryColor);
-  TextStyle get confirmButtonStyle => const TextStyle(color: Colors.white);
+
+  TextStyle get cancelButtonStyle => TextStyle(
+    color: primaryColor,
+    fontWeight: FontWeight.w500,
+    letterSpacing: 0.5,
+  );
+
+  TextStyle get confirmButtonStyle => TextStyle(
+    color: Colors.white,
+    fontWeight: FontWeight.w500,
+    letterSpacing: 0.5,
+  );
+
   ButtonStyle get confirmButtonTheme => ElevatedButton.styleFrom(
     backgroundColor: primaryColor,
-    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+    elevation: 2,
+    shape: RoundedRectangleBorder(
+      borderRadius: BorderRadius.circular(8),
+    ),
   );
 }
+
+
+
+
+
+
+

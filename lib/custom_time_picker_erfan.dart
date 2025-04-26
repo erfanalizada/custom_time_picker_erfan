@@ -14,7 +14,6 @@ class CustomTimePickerErfan extends StatefulWidget {
   final String? confirmText;
   final String? cancelText;
   final String? chooseTimeText;
-  final IconData? editIcon;
   final ValueChanged<DateTime>? onDateChanged;
 
   const CustomTimePickerErfan({
@@ -29,7 +28,6 @@ class CustomTimePickerErfan extends StatefulWidget {
     this.confirmText,
     this.cancelText,
     this.chooseTimeText,
-    this.editIcon,
     this.onDateChanged,
   });
 
@@ -64,7 +62,6 @@ class _CustomTimePickerErfanState extends State<CustomTimePickerErfan> {
       confirmText: widget.confirmText ?? 'Confirm',
       cancelText: widget.cancelText ?? 'Cancel',
       chooseTimeText: widget.chooseTimeText ?? 'Choose Time',
-      editIcon: widget.editIcon, // Pass the custom icon!
     );
     _timeController.text = _model.getFormattedTime();
     _hourController = FixedExtentScrollController(initialItem: _model.selectedHour);
@@ -143,8 +140,8 @@ class _CustomTimePickerErfanState extends State<CustomTimePickerErfan> {
       child: Container(
         padding: const EdgeInsets.symmetric(vertical: 8),
         decoration: BoxDecoration(
-          color: const Color(0xFFE3DBF9),
-          border: Border.all(color: _model.primaryColor.withValues(alpha: 0.6)),
+          color: TimePickerModel.timeDisplayBackgroundColor,  // Use model color instead of hardcoded
+          border: Border.all(color: _model.primaryColor.withOpacity(0.6)),
           borderRadius: BorderRadius.circular(8),
         ),
         child: SizedBox(
@@ -192,17 +189,6 @@ class _CustomTimePickerErfanState extends State<CustomTimePickerErfan> {
                         textAlign: TextAlign.center,
                       ),
               ),
-              if (!_model.isEditing && _model.editIcon != null)
-                Positioned(
-                  top: 0,
-                  right: 8,
-                  child: Icon(
-                    _model.editIcon!,
-                    size: 16,
-                    color: _model.primaryColor.withValues(alpha: 0.6), // Adjust the opacity here
-                 
-                  ),
-                ),
             ],
           ),
         ),
@@ -261,19 +247,31 @@ class _CustomTimePickerErfanState extends State<CustomTimePickerErfan> {
           width: 70,
           child: ListWheelScrollView.useDelegate(
             controller: controller,
-            itemExtent: 40,
-            physics: const FixedExtentScrollPhysics(),
+            itemExtent: 50,  // Increased from 40 for better spacing
+            diameterRatio: 2.0,  // Increased from default 2.0 for smoother curve
+            perspective: 0.005,   // Reduced from default 0.003 for subtler 3D effect
+            physics: const FixedExtentScrollPhysics(
+              parent: BouncingScrollPhysics(), // Added bouncing effect
+            ),
+            overAndUnderCenterOpacity: 0.7, // Added fade effect for non-selected items
+            magnification: 1.2,  // Added magnification for selected item
+            useMagnifier: true,  // Enable magnification
             onSelectedItemChanged: onChanged,
             childDelegate: ListWheelChildBuilderDelegate(
               builder: (context, index) {
                 if (index < 0 || index > maxValue) return null;
+                final isSelected = index == value;
                 return Center(
-                  child: Text(
-                    index.toString().padLeft(2, '0'),
-                    style: _model.getWheelNumberStyle(index == value),
+                  child: AnimatedDefaultTextStyle(
+                    duration: const Duration(milliseconds: 200),
+                    style: _model.getWheelNumberStyle(isSelected),
+                    child: Text(
+                      index.toString().padLeft(2, '0'),
+                    ),
                   ),
                 );
               },
+              childCount: maxValue + 1,
             ),
           ),
         ),
@@ -332,7 +330,6 @@ Future<TimeOfDay?> showTimePickerErfan({
   String? confirmText,
   String? cancelText,
   String? chooseTimeText,
-  IconData? editIcon,
 }) {
   return showDialog<TimeOfDay>(
     context: context,
@@ -348,7 +345,6 @@ Future<TimeOfDay?> showTimePickerErfan({
       confirmText: confirmText,
       cancelText: cancelText,
       chooseTimeText: chooseTimeText,
-      editIcon: editIcon,
     ),
   );
 }
