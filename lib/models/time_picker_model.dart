@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 
 class TimePickerModel {
   final TimeOfDay initialTime;
-  final DateTime selectedDate;
+  DateTime selectedDate;
   final Color primaryColor;
   final Color backgroundColor;
   final Color textColor;
@@ -14,7 +14,7 @@ class TimePickerModel {
   final String chooseTimeText;
   final String hourLabel;
   final String minuteLabel;
-  final IconData editIcon;
+  final IconData? editIcon; // Nullable!
 
   late int _selectedHour;
   late int _selectedMinute;
@@ -40,7 +40,7 @@ class TimePickerModel {
     this.chooseTimeText = 'Choose Time',
     this.hourLabel = 'hour',
     this.minuteLabel = 'min',
-    this.editIcon = Icons.edit,
+    this.editIcon,
   }) {
     _selectedHour = initialTime.hour;
     _selectedMinute = initialTime.minute;
@@ -66,15 +66,14 @@ class TimePickerModel {
   }
 
   bool _isValidTime(int hour, int minute) {
-  if (_isToday()) {
-    final now = TimeOfDay.now();
-    if (hour > now.hour || (hour == now.hour && minute > now.minute)) {
-      return false; 
+    if (_isToday()) {
+      final now = TimeOfDay.now();
+      if (hour > now.hour || (hour == now.hour && minute > now.minute)) {
+        return false;
+      }
     }
+    return hour >= 0 && hour < 24 && minute >= 0 && minute < 60;
   }
-  return hour >= 0 && hour < 24 && minute >= 0 && minute < 60;
-}
-
 
   void updateTime(int hour, int minute) {
     if (_isValidTime(hour, minute)) {
@@ -88,17 +87,14 @@ class TimePickerModel {
 
   void handleTimeInput(String input, TextEditingController controller) {
     final digits = input.replaceAll(RegExp(r'[^0-9]'), '');
-
     if (digits.length >= 2) {
       final hours = digits.substring(0, 2);
       final minutes = digits.length > 2 ? digits.substring(2, min(4, digits.length)) : '';
       final formatted = '$hours:$minutes';
-
       controller.value = TextEditingValue(
         text: formatted,
         selection: TextSelection.collapsed(offset: formatted.length),
       );
-
       if (digits.length >= 4) {
         final h = int.tryParse(digits.substring(0, 2));
         final m = int.tryParse(digits.substring(2, 4));
@@ -116,14 +112,19 @@ class TimePickerModel {
     _errorMessage = null;
   }
 
+  void updateSelectedDate(DateTime newDate) {
+    selectedDate = newDate;
+    updateTime(_selectedHour, _selectedMinute);
+  }
+
   // Styles
   TextStyle get headerStyle => TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: primaryColor);
   TextStyle get timeDisplayStyle => TextStyle(fontSize: 32, fontWeight: FontWeight.bold, color: errorMessage != null ? errorColor : primaryColor);
-  TextStyle get wheelLabelStyle => TextStyle(fontSize: 12, color: primaryColor.withOpacity(0.6));
+  TextStyle get wheelLabelStyle => TextStyle(fontSize: 12, color: primaryColor.withAlpha(153));
   TextStyle getWheelNumberStyle(bool isSelected) => TextStyle(
     fontSize: isSelected ? 20 : 16,
     fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
-    color: isSelected ? primaryColor : primaryColor.withOpacity(0.5),
+    color: isSelected ? primaryColor : primaryColor.withAlpha(77),
   );
   TextStyle get cancelButtonStyle => TextStyle(color: primaryColor);
   TextStyle get confirmButtonStyle => const TextStyle(color: Colors.white);
@@ -132,4 +133,3 @@ class TimePickerModel {
     shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
   );
 }
-

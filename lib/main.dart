@@ -1,3 +1,4 @@
+import 'package:custom_time_picker_erfan/custom_time_picker_erfan.dart';
 import 'package:flutter/material.dart';
 
 void main() {
@@ -28,8 +29,12 @@ class Screen extends StatelessWidget {
       appBar: AppBar(
         title: const Text('My Screen'),
       ),
-      body: const Center(
-        child: Text("data"),
+      body:  Center(
+        child: CustomTimePickerErfan(
+          initialTime: TimeOfDay.now(),
+          selectedDate: DateTime.now(),
+          editIcon: Icons.edit,
+        ),
       ),
     );
   }

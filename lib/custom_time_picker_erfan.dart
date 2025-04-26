@@ -15,6 +15,7 @@ class CustomTimePickerErfan extends StatefulWidget {
   final String? cancelText;
   final String? chooseTimeText;
   final IconData? editIcon;
+  final ValueChanged<DateTime>? onDateChanged;
 
   const CustomTimePickerErfan({
     super.key,
@@ -29,6 +30,7 @@ class CustomTimePickerErfan extends StatefulWidget {
     this.cancelText,
     this.chooseTimeText,
     this.editIcon,
+    this.onDateChanged,
   });
 
   @override
@@ -40,6 +42,13 @@ class _CustomTimePickerErfanState extends State<CustomTimePickerErfan> {
   late final FixedExtentScrollController _hourController;
   late final FixedExtentScrollController _minuteController;
   final TextEditingController _timeController = TextEditingController();
+
+  void updateSelectedDate(DateTime newDate) {
+    setState(() {
+      _model.updateSelectedDate(newDate);
+      widget.onDateChanged?.call(newDate);
+    });
+  }
 
   @override
   void initState() {
@@ -55,9 +64,9 @@ class _CustomTimePickerErfanState extends State<CustomTimePickerErfan> {
       confirmText: widget.confirmText ?? 'Confirm',
       cancelText: widget.cancelText ?? 'Cancel',
       chooseTimeText: widget.chooseTimeText ?? 'Choose Time',
+      editIcon: widget.editIcon, // Pass the custom icon!
     );
     _timeController.text = _model.getFormattedTime();
-
     _hourController = FixedExtentScrollController(initialItem: _model.selectedHour);
     _minuteController = FixedExtentScrollController(initialItem: _model.selectedMinute);
   }
@@ -73,8 +82,8 @@ class _CustomTimePickerErfanState extends State<CustomTimePickerErfan> {
   bool _isToday() {
     final now = DateTime.now();
     return widget.selectedDate.year == now.year &&
-           widget.selectedDate.month == now.month &&
-           widget.selectedDate.day == now.day;
+        widget.selectedDate.month == now.month &&
+        widget.selectedDate.day == now.day;
   }
 
   int _getMaxHour() {
@@ -135,7 +144,7 @@ class _CustomTimePickerErfanState extends State<CustomTimePickerErfan> {
         padding: const EdgeInsets.symmetric(vertical: 8),
         decoration: BoxDecoration(
           color: const Color(0xFFE3DBF9),
-          border: Border.all(color: _model.primaryColor.withOpacity(0.1)),
+          border: Border.all(color: _model.primaryColor.withValues(alpha: 0.6)),
           borderRadius: BorderRadius.circular(8),
         ),
         child: SizedBox(
@@ -160,7 +169,6 @@ class _CustomTimePickerErfanState extends State<CustomTimePickerErfan> {
                         onChanged: (value) {
                           setState(() {
                             _model.handleTimeInput(value, _timeController);
-
                             if (_model.errorMessage == null) {
                               _hourController.jumpToItem(_model.selectedHour);
                               _minuteController.jumpToItem(_model.selectedMinute);
@@ -184,14 +192,15 @@ class _CustomTimePickerErfanState extends State<CustomTimePickerErfan> {
                         textAlign: TextAlign.center,
                       ),
               ),
-              if (!_model.isEditing)
+              if (!_model.isEditing && _model.editIcon != null)
                 Positioned(
                   top: 0,
                   right: 8,
                   child: Icon(
-                    widget.editIcon ?? Icons.edit,
+                    _model.editIcon!,
                     size: 16,
-                    color: _model.primaryColor.withOpacity(0.6),
+                    color: _model.primaryColor.withValues(alpha: 0.6), // Adjust the opacity here
+                 
                   ),
                 ),
             ],
@@ -297,7 +306,7 @@ class _CustomTimePickerErfanState extends State<CustomTimePickerErfan> {
                     )
                 : null,
             style: _model.confirmButtonTheme.copyWith(
-              minimumSize: MaterialStateProperty.all(Size(double.infinity, screenHeight * 0.065)),
+              minimumSize: WidgetStateProperty.all(Size(double.infinity, screenHeight * 0.065)),
             ),
             child: Text(
               _model.confirmText,
@@ -313,6 +322,8 @@ class _CustomTimePickerErfanState extends State<CustomTimePickerErfan> {
 Future<TimeOfDay?> showTimePickerErfan({
   required BuildContext context,
   required TimeOfDay initialTime,
+  DateTime? selectedDate,
+  ValueChanged<DateTime>? onDateChanged,
   Color primaryColor = TimePickerModel.defaultPrimaryColor,
   Color backgroundColor = TimePickerModel.defaultBackgroundColor,
   Color textColor = TimePickerModel.defaultTextColor,
@@ -327,7 +338,8 @@ Future<TimeOfDay?> showTimePickerErfan({
     context: context,
     builder: (context) => CustomTimePickerErfan(
       initialTime: initialTime,
-      selectedDate: DateTime.now(),
+      selectedDate: selectedDate ?? DateTime.now(),
+      onDateChanged: onDateChanged,
       primaryColor: primaryColor,
       backgroundColor: backgroundColor,
       textColor: textColor,
