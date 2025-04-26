@@ -1,6 +1,6 @@
 name: custom_time_picker_erfan
 description: "A customizable time picker widget for Flutter applications with scroll wheels and manual text input support"
-version: 0.0.1
+version: 0.0.2  # Increment from 0.0.1 to 0.0.2
 homepage: https://github.com/erfanalizada/custom_time_picker_erfan
 repository: https://github.com/erfanalizada/custom_time_picker_erfan
 
