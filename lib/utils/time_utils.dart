@@ -24,11 +24,11 @@ class TimeUtils {
     if (!isValidTimeFormat(timeString)) {
       throw FormatException('Invalid time format: $timeString');
     }
-    
+
     final parts = timeString.split(':');
     final hour = int.parse(parts[0]);
     final minute = int.parse(parts[1]);
-    
+
     return TimeOfDay(hour: hour, minute: minute);
   }
 
@@ -38,8 +38,7 @@ class TimeUtils {
   /// @return true if the time is in the future, false otherwise
   static bool isTimeInFuture(TimeOfDay time) {
     final now = TimeOfDay.now();
-    return time.hour > now.hour || (time.hour == now.hour && time.minute > now.minute);
+    return time.hour > now.hour ||
+        (time.hour == now.hour && time.minute > now.minute);
   }
 }
-
-

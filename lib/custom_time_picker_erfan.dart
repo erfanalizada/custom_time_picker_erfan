@@ -8,13 +8,14 @@
 /// * [CustomTimePickerErfan] - The widget that displays the time picker
 /// * [showTimePickerErfan] - A function to show the time picker as a dialog
 library;
+
 import 'dart:math';
 import 'package:custom_time_picker_erfan/models/time_picker_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
 /// A customizable time picker widget for Flutter applications.
-/// 
+///
 /// This widget provides a highly customizable time picker that supports both
 /// scroll wheels and manual text input to select a valid time. It also restricts
 /// future times if the selected date is today.
@@ -31,35 +32,35 @@ import 'package:flutter/services.dart';
 class CustomTimePickerErfan extends StatefulWidget {
   /// The initial time to display when the picker is first shown.
   final TimeOfDay initialTime;
-  
+
   /// The selected date context for the time picker.
   /// Used to restrict future times if the date is today.
   final DateTime selectedDate;
-  
+
   /// The primary color used for highlights, headers, and selected values.
   final Color primaryColor;
-  
+
   /// The background color of the time picker dialog.
   final Color backgroundColor;
-  
+
   /// The color used for text elements throughout the widget.
   final Color textColor;
-  
+
   /// The color used to indicate errors in input validation.
   final Color? errorColor;
-  
+
   /// The color used for disabled elements like buttons.
   final Color? disabledColor;
-  
+
   /// The text to display on the confirm button.
   final String? confirmText;
-  
+
   /// The text to display on the cancel button.
   final String? cancelText;
-  
+
   /// The text to display as the header/title of the time picker.
   final String? chooseTimeText;
-  
+
   /// Callback function that is called when the date changes.
   final ValueChanged<DateTime>? onDateChanged;
 
@@ -109,14 +110,19 @@ class _CustomTimePickerErfanState extends State<CustomTimePickerErfan> {
       backgroundColor: widget.backgroundColor,
       textColor: widget.textColor,
       errorColor: widget.errorColor ?? TimePickerModel.defaultErrorColor,
-      disabledColor: widget.disabledColor ?? TimePickerModel.defaultDisabledColor,
+      disabledColor:
+          widget.disabledColor ?? TimePickerModel.defaultDisabledColor,
       confirmText: widget.confirmText ?? 'Confirm',
       cancelText: widget.cancelText ?? 'Cancel',
       chooseTimeText: widget.chooseTimeText ?? 'Choose Time',
     );
     _timeController.text = _model.getFormattedTime();
-    _hourController = FixedExtentScrollController(initialItem: _model.selectedHour);
-    _minuteController = FixedExtentScrollController(initialItem: _model.selectedMinute);
+    _hourController = FixedExtentScrollController(
+      initialItem: _model.selectedHour,
+    );
+    _minuteController = FixedExtentScrollController(
+      initialItem: _model.selectedMinute,
+    );
   }
 
   @override
@@ -191,7 +197,9 @@ class _CustomTimePickerErfanState extends State<CustomTimePickerErfan> {
       child: Container(
         padding: const EdgeInsets.symmetric(vertical: 8),
         decoration: BoxDecoration(
-          color: TimePickerModel.timeDisplayBackgroundColor,  // Use model color instead of hardcoded
+          color:
+              TimePickerModel
+                  .timeDisplayBackgroundColor, // Use model color instead of hardcoded
           border: Border.all(color: _model.primaryColor.withValues(alpha: 0.6)),
           borderRadius: BorderRadius.circular(8),
         ),
@@ -200,45 +208,49 @@ class _CustomTimePickerErfanState extends State<CustomTimePickerErfan> {
           child: Stack(
             children: [
               Center(
-                child: _model.isEditing
-                    ? TextField(
-                        controller: _timeController,
-                        textAlign: TextAlign.center,
-                        keyboardType: TextInputType.number,
-                        style: _model.timeDisplayStyle,
-                        decoration: const InputDecoration(
-                          border: InputBorder.none,
-                          contentPadding: EdgeInsets.zero,
+                child:
+                    _model.isEditing
+                        ? TextField(
+                          controller: _timeController,
+                          textAlign: TextAlign.center,
+                          keyboardType: TextInputType.number,
+                          style: _model.timeDisplayStyle,
+                          decoration: const InputDecoration(
+                            border: InputBorder.none,
+                            contentPadding: EdgeInsets.zero,
+                          ),
+                          inputFormatters: [
+                            FilteringTextInputFormatter.digitsOnly,
+                            LengthLimitingTextInputFormatter(4),
+                          ],
+                          onChanged: (value) {
+                            setState(() {
+                              _model.handleTimeInput(value, _timeController);
+                              if (_model.errorMessage == null) {
+                                _hourController.jumpToItem(_model.selectedHour);
+                                _minuteController.jumpToItem(
+                                  _model.selectedMinute,
+                                );
+                              }
+                            });
+                          },
+                          onSubmitted: (_) {
+                            setState(() {
+                              _model.setEditing(false);
+                              if (_timeController.text.isEmpty) {
+                                _timeController.text =
+                                    _model.getFormattedTime();
+                                _model.clearError();
+                              }
+                            });
+                          },
+                          autofocus: true,
+                        )
+                        : Text(
+                          _model.getFormattedTime(),
+                          style: _model.timeDisplayStyle,
+                          textAlign: TextAlign.center,
                         ),
-                        inputFormatters: [
-                          FilteringTextInputFormatter.digitsOnly,
-                          LengthLimitingTextInputFormatter(4),
-                        ],
-                        onChanged: (value) {
-                          setState(() {
-                            _model.handleTimeInput(value, _timeController);
-                            if (_model.errorMessage == null) {
-                              _hourController.jumpToItem(_model.selectedHour);
-                              _minuteController.jumpToItem(_model.selectedMinute);
-                            }
-                          });
-                        },
-                        onSubmitted: (_) {
-                          setState(() {
-                            _model.setEditing(false);
-                            if (_timeController.text.isEmpty) {
-                              _timeController.text = _model.getFormattedTime();
-                              _model.clearError();
-                            }
-                          });
-                        },
-                        autofocus: true,
-                      )
-                    : Text(
-                        _model.getFormattedTime(),
-                        style: _model.timeDisplayStyle,
-                        textAlign: TextAlign.center,
-                      ),
               ),
             ],
           ),
@@ -298,15 +310,17 @@ class _CustomTimePickerErfanState extends State<CustomTimePickerErfan> {
           width: 70,
           child: ListWheelScrollView.useDelegate(
             controller: controller,
-            itemExtent: 50,  // Increased from 40 for better spacing
-            diameterRatio: 2.0,  // Increased from default 2.0 for smoother curve
-            perspective: 0.005,   // Reduced from default 0.003 for subtler 3D effect
+            itemExtent: 50, // Increased from 40 for better spacing
+            diameterRatio: 2.0, // Increased from default 2.0 for smoother curve
+            perspective:
+                0.005, // Reduced from default 0.003 for subtler 3D effect
             physics: const FixedExtentScrollPhysics(
               parent: BouncingScrollPhysics(), // Added bouncing effect
             ),
-            overAndUnderCenterOpacity: 0.7, // Added fade effect for non-selected items
-            magnification: 1.2,  // Added magnification for selected item
-            useMagnifier: true,  // Enable magnification
+            overAndUnderCenterOpacity:
+                0.7, // Added fade effect for non-selected items
+            magnification: 1.2, // Added magnification for selected item
+            useMagnifier: true, // Enable magnification
             onSelectedItemChanged: onChanged,
             childDelegate: ListWheelChildBuilderDelegate(
               builder: (context, index) {
@@ -316,9 +330,7 @@ class _CustomTimePickerErfanState extends State<CustomTimePickerErfan> {
                   child: AnimatedDefaultTextStyle(
                     duration: const Duration(milliseconds: 200),
                     style: _model.getWheelNumberStyle(isSelected),
-                    child: Text(
-                      index.toString().padLeft(2, '0'),
-                    ),
+                    child: Text(index.toString().padLeft(2, '0')),
                   ),
                 );
               },
@@ -348,19 +360,22 @@ class _CustomTimePickerErfanState extends State<CustomTimePickerErfan> {
         const SizedBox(width: 8),
         Expanded(
           child: ElevatedButton(
-            onPressed: _canConfirm()
-                ? () => Navigator.pop(
+            onPressed:
+                _canConfirm()
+                    ? () => Navigator.pop(
                       context,
-                      TimeOfDay(hour: _model.selectedHour, minute: _model.selectedMinute),
+                      TimeOfDay(
+                        hour: _model.selectedHour,
+                        minute: _model.selectedMinute,
+                      ),
                     )
-                : null,
+                    : null,
             style: _model.confirmButtonTheme.copyWith(
-              minimumSize: WidgetStateProperty.all(Size(double.infinity, screenHeight * 0.065)),
+              minimumSize: WidgetStateProperty.all(
+                Size(double.infinity, screenHeight * 0.065),
+              ),
             ),
-            child: Text(
-              _model.confirmText,
-              style: _model.confirmButtonStyle,
-            ),
+            child: Text(_model.confirmText, style: _model.confirmButtonStyle),
           ),
         ),
       ],
@@ -410,18 +425,19 @@ Future<TimeOfDay?> showTimePickerErfan({
 }) {
   return showDialog<TimeOfDay>(
     context: context,
-    builder: (context) => CustomTimePickerErfan(
-      initialTime: initialTime,
-      selectedDate: selectedDate ?? DateTime.now(),
-      onDateChanged: onDateChanged,
-      primaryColor: primaryColor,
-      backgroundColor: backgroundColor,
-      textColor: textColor,
-      errorColor: errorColor,
-      disabledColor: disabledColor,
-      confirmText: confirmText,
-      cancelText: cancelText,
-      chooseTimeText: chooseTimeText,
-    ),
+    builder:
+        (context) => CustomTimePickerErfan(
+          initialTime: initialTime,
+          selectedDate: selectedDate ?? DateTime.now(),
+          onDateChanged: onDateChanged,
+          primaryColor: primaryColor,
+          backgroundColor: backgroundColor,
+          textColor: textColor,
+          errorColor: errorColor,
+          disabledColor: disabledColor,
+          confirmText: confirmText,
+          cancelText: cancelText,
+          chooseTimeText: chooseTimeText,
+        ),
   );
 }

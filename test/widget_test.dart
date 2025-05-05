@@ -10,25 +10,29 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:custom_time_picker_erfan/custom_time_picker_erfan.dart';
 
 void main() {
-  testWidgets('Time Picker shows and selects time', (WidgetTester tester) async {
+  testWidgets('Time Picker shows and selects time', (
+    WidgetTester tester,
+  ) async {
     // Build a MaterialApp with a button to show the time picker
-    await tester.pumpWidget(MaterialApp(
-      home: Scaffold(
-        body: Builder(
-          builder: (BuildContext context) {
-            return ElevatedButton(
-              onPressed: () {
-                showTimePickerErfan(
-                  context: context,
-                  initialTime: const TimeOfDay(hour: 10, minute: 30),
-                );
-              },
-              child: const Text('Show Time Picker'),
-            );
-          },
+    await tester.pumpWidget(
+      MaterialApp(
+        home: Scaffold(
+          body: Builder(
+            builder: (BuildContext context) {
+              return ElevatedButton(
+                onPressed: () {
+                  showTimePickerErfan(
+                    context: context,
+                    initialTime: const TimeOfDay(hour: 10, minute: 30),
+                  );
+                },
+                child: const Text('Show Time Picker'),
+              );
+            },
+          ),
         ),
       ),
-    ));
+    );
 
     // Verify the button is present
     expect(find.text('Show Time Picker'), findsOneWidget);

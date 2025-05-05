@@ -44,18 +44,19 @@ Future<TimeOfDay?> showTimePickerErfan({
 }) {
   return showDialog<TimeOfDay>(
     context: context,
-    builder: (context) => CustomTimePickerErfan(
-      initialTime: initialTime,
-      selectedDate: selectedDate ?? DateTime.now(),
-      onDateChanged: onDateChanged,
-      primaryColor: primaryColor,
-      backgroundColor: backgroundColor,
-      textColor: textColor,
-      errorColor: errorColor,
-      disabledColor: disabledColor,
-      confirmText: confirmText,
-      cancelText: cancelText,
-      chooseTimeText: chooseTimeText,
-    ),
+    builder:
+        (context) => CustomTimePickerErfan(
+          initialTime: initialTime,
+          selectedDate: selectedDate ?? DateTime.now(),
+          onDateChanged: onDateChanged,
+          primaryColor: primaryColor,
+          backgroundColor: backgroundColor,
+          textColor: textColor,
+          errorColor: errorColor,
+          disabledColor: disabledColor,
+          confirmText: confirmText,
+          cancelText: cancelText,
+          chooseTimeText: chooseTimeText,
+        ),
   );
 }
