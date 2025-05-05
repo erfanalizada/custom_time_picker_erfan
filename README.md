@@ -1,7 +1,15 @@
 # 📆 Custom Time Picker Erfan
 
 A highly customizable, editable, and responsive time picker widget for Flutter.
-Supports both scroll wheels and manual text input to pick a valid time — and restricts future times if the selected date is today.
+Supports both scroll wheels and manual text input to pick a valid time — and restricts future times if the selected date is 
+today.
+
+# ☕ Support
+
+If you find this package helpful, consider supporting my work:
+
+[![Buy Me a Coffee](https://img.shields.io/badge/Buy%20me%20a%20coffee-%23FFDD00?style=for-the-badge&logo=buy-me-a-coffee&logoColor=black)](https://buymeacoffee.com/erfan1)
+
 
 ## ✨ Features
 
@@ -26,7 +34,7 @@ Add this to your package's `pubspec.yaml` file:
 
 ```yaml
 dependencies:
-  custom_time_picker_erfan: ^0.0.3
+  custom_time_picker_erfan: ^0.0.4
 ```
 Then run:
 

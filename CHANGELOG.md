@@ -1,3 +1,10 @@
+
+## 0.0.4
+
+* updated Readme
+
+
+
 ## 0.0.3
 
 * Added comprehensive API documentation
