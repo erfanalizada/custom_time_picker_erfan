@@ -26,7 +26,7 @@ Add this to your package's `pubspec.yaml` file:
 
 ```yaml
 dependencies:
-  custom_time_picker_erfan: ^0.0.1
+  custom_time_picker_erfan: ^0.0.3
 ```
 Then run:
 
@@ -217,4 +217,5 @@ Example of good documentation:
 ```
 
 The package uses the `public_member_api_docs` lint rule to ensure documentation coverage.
+
 
