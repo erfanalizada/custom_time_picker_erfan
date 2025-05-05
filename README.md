@@ -168,3 +168,53 @@ For more information on the code and structure, please visit [https://github.com
 
 
 
+## 📝 API Documentation
+
+This package follows Dart's documentation standards to ensure good code readability and usability.
+
+### Documentation Coverage
+
+All public API elements include dartdoc comments that explain:
+- What the element does
+- Parameters and their purpose
+- Return values
+- Usage examples where appropriate
+
+### Viewing Documentation
+
+You can view the full API documentation on [pub.dev](https://pub.dev/documentation/custom_time_picker_erfan/latest/).
+
+### For Contributors
+
+When contributing to this package, please ensure all public API elements have proper documentation:
+
+1. Document all public classes, methods, properties, and functions
+2. Use `///` triple-slash comments for dartdoc
+3. Include parameter descriptions with `@param` tags
+4. Describe return values with `@return` tags
+5. Add examples with `/// Example:` followed by code blocks
+
+Example of good documentation:
+
+```dart
+/// A customizable time picker widget that supports both wheel scrolling and manual input.
+/// 
+/// This widget provides a dialog with time selection capabilities through either
+/// scrollable wheels or direct text input, with validation for both methods.
+/// 
+/// @param initialTime The time to display when the picker is first shown.
+/// @param selectedDate The date context for the time picker, used to restrict future times.
+/// @param primaryColor The main color used for highlights and selected values.
+/// @return A [TimeOfDay] object representing the selected time, or null if canceled.
+/// 
+/// Example:
+/// ```dart
+/// final TimeOfDay? result = await showTimePickerErfan(
+///   context: context,
+///   initialTime: TimeOfDay.now(),
+/// );
+/// ```
+```
+
+The package uses the `public_member_api_docs` lint rule to ensure documentation coverage.
+

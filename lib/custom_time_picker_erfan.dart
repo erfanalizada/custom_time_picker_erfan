@@ -1,21 +1,72 @@
+/// A customizable time picker library for Flutter applications.
+///
+/// This library provides a highly customizable time picker that supports both
+/// scroll wheels and manual text input to select a valid time. It also restricts
+/// future times if the selected date is today.
+///
+/// The main components are:
+/// * [CustomTimePickerErfan] - The widget that displays the time picker
+/// * [showTimePickerErfan] - A function to show the time picker as a dialog
+library;
 import 'dart:math';
 import 'package:custom_time_picker_erfan/models/time_picker_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
+/// A customizable time picker widget for Flutter applications.
+/// 
+/// This widget provides a highly customizable time picker that supports both
+/// scroll wheels and manual text input to select a valid time. It also restricts
+/// future times if the selected date is today.
+///
+/// Example:
+/// ```dart
+/// CustomTimePickerErfan(
+///   initialTime: TimeOfDay.now(),
+///   selectedDate: DateTime.now(),
+///   primaryColor: Colors.blue,
+///   backgroundColor: Colors.white,
+/// )
+/// ```
 class CustomTimePickerErfan extends StatefulWidget {
+  /// The initial time to display when the picker is first shown.
   final TimeOfDay initialTime;
+  
+  /// The selected date context for the time picker.
+  /// Used to restrict future times if the date is today.
   final DateTime selectedDate;
+  
+  /// The primary color used for highlights, headers, and selected values.
   final Color primaryColor;
+  
+  /// The background color of the time picker dialog.
   final Color backgroundColor;
+  
+  /// The color used for text elements throughout the widget.
   final Color textColor;
+  
+  /// The color used to indicate errors in input validation.
   final Color? errorColor;
+  
+  /// The color used for disabled elements like buttons.
   final Color? disabledColor;
+  
+  /// The text to display on the confirm button.
   final String? confirmText;
+  
+  /// The text to display on the cancel button.
   final String? cancelText;
+  
+  /// The text to display as the header/title of the time picker.
   final String? chooseTimeText;
+  
+  /// Callback function that is called when the date changes.
   final ValueChanged<DateTime>? onDateChanged;
 
+  /// Creates a customizable time picker widget.
+  ///
+  /// The [initialTime] and [selectedDate] parameters are required.
+  /// Other parameters allow customization of colors and text labels.
   const CustomTimePickerErfan({
     super.key,
     required this.initialTime,
@@ -317,6 +368,32 @@ class _CustomTimePickerErfanState extends State<CustomTimePickerErfan> {
   }
 }
 
+/// Shows a customizable time picker dialog and returns the selected time.
+///
+/// This function displays a dialog with a customizable time picker and returns
+/// the selected [TimeOfDay] when the user confirms, or null if the user cancels.
+///
+/// Parameters:
+/// - [context]: The build context in which to show the dialog.
+/// - [initialTime]: The time to display when the picker is first shown.
+/// - [selectedDate]: Optional date context for the time picker (defaults to today).
+/// - [onDateChanged]: Optional callback for when the date changes.
+/// - [primaryColor], [backgroundColor], [textColor], [errorColor], [disabledColor]:
+///   Colors for customizing the appearance of the time picker.
+/// - [confirmText], [cancelText], [chooseTimeText]: Custom text labels.
+///
+/// Returns a [Future] that completes with the selected [TimeOfDay] or null.
+///
+/// Example:
+/// ```dart
+/// final TimeOfDay? result = await showTimePickerErfan(
+///   context: context,
+///   initialTime: TimeOfDay.now(),
+/// );
+/// if (result != null) {
+///   print('Selected time: ${result.format(context)}');
+/// }
+/// ```
 Future<TimeOfDay?> showTimePickerErfan({
   required BuildContext context,
   required TimeOfDay initialTime,
